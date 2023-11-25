@@ -10,23 +10,28 @@ on:
      - main
 
 jobs:
- deploy_cdk:
-   runs-on: ubuntu-latest
-   environment: dev
-   steps:
-     - name: Checkout this repo
-       uses: actions/checkout@v3
+  deploy_cdk:
+    runs-on: ubuntu-latest
+    environment: dev
+      steps:
+        - name: Checkout this repo
+          uses: actions/checkout@v3
 
-     - name: Configure AWS credentials
-       uses: aws-actions/configure-aws-credentials@v4
-       with:
-         role-to-assume: ${{ vars.AWS_GITHUB_ACTIONS_ROLE }}
-         aws-region: ${{ vars.AWS_TARGET_REGION }}
-         role-session-name: "GitHubActions-DeployLayerStack"
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            role-to-assume: ${{ vars.AWS_GITHUB_ACTIONS_ROLE }}
+            aws-region: ${{ vars.AWS_TARGET_REGION }}
+            role-session-name: "GitHubActions-DeployLayerStack"
 
+        - name: Install dependencies
+          working-directory: aws
+          run: npm ci
 
-     - name: Deploy LambdaStack (via CDK)
-       working-directory: aws
-       run: |
-        npm ci
-        npm run cdk deploy -c config=dev
+        - name: CDK Diff
+          working-directory: aws
+          run: npm run cdk diff -c config=dev
+
+        - name: CDK Deploy
+          working-directory: aws
+          run: npm run cdk deploy -c config=dev
