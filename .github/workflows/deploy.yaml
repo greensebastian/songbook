@@ -1,0 +1,32 @@
+name: Deploy Songbook
+
+permissions:
+ id-token: write # Required for GitHub to be able to create a token for you to authenticate with AWS
+ contents: read  # Permits your action to read this repo.
+
+on:
+ push:
+   branches:
+     - main
+
+jobs:
+ deploy_cdk:
+   runs-on: ubuntu-latest
+   environment: dev
+   steps:
+     - name: Checkout this repo
+       uses: actions/checkout@v3
+
+     - name: Configure AWS credentials
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+         role-to-assume: ${{ vars.AWS_GITHUB_ACTIONS_ROLE }}
+         aws-region: ${{ vars.AWS_TARGET_REGION }}
+         role-session-name: "GitHubActions-DeployLayerStack"
+
+
+     - name: Deploy LambdaStack (via CDK)
+       working-directory: aws
+       run: |
+        npm ci
+        npm run cdk deploy -c config=dev
