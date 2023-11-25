@@ -34,4 +34,4 @@ jobs:
 
       - name: CDK Deploy
         working-directory: aws
-        run: npm run -- cdk deploy -c config=dev
+        run: npm run -- cdk deploy --all -c config=dev --require-approval never
