@@ -13,7 +13,7 @@ jobs:
   deploy_cdk:
     runs-on: ubuntu-latest
     environment: dev
-      steps:
+    steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
 
