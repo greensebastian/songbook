@@ -30,8 +30,8 @@ jobs:
 
       - name: CDK Diff
         working-directory: aws
-        run: npm run cdk diff -c config=dev
+        run: npm run -- cdk diff -c config=dev
 
       - name: CDK Deploy
         working-directory: aws
-        run: npm run cdk deploy -c config=dev
+        run: npm run -- cdk deploy -c config=dev
