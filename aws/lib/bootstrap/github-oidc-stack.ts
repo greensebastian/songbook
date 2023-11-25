@@ -26,9 +26,6 @@ export class GitHubOidcStack extends BaseStack {
     const conditions: iam.Conditions = {
       StringLike: {
         [`${githubDomain}:sub`]: allowedRepositoryPatterns,
-      },
-      StringEquals: {
-        [`${githubDomain}:environment`]: props.environment,
       }
     };
 
